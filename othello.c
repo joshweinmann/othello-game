@@ -693,18 +693,17 @@ char checkWinner(char board[][SIZE])
 
 	// count player discs
 	for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
+        	for (int j = 0; j < SIZE; j++) {
 
-	        // check for black discs
-	        if (board[i][j] == 'B') 
-	        	b++;
+	        	// check for black discs
+	        	if (board[i][j] == BLACK) 
+	        		b++;
 
 			// check for white discs
-			if (board[i][j] == 'W') 
-            	w++;
-                        
+			if (board[i][j] == WHITE) 
+            			w++;        
+        	}
         }
-    }
 
 	// more white discs
 	if (w > b) {
