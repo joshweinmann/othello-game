@@ -634,7 +634,7 @@ bool isValidMoveAvailable(char board[][SIZE], char disc)
 {
 	// check all spaces
 	for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
+        	for (int j = 0; j < SIZE; j++) {
 			// check if move is valid in space
 			if (isValidMove(board, i, j, disc)) 
 				return true;
