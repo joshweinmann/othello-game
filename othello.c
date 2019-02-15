@@ -1,7 +1,7 @@
 //***************************************************
 // Filename: othello.c
 //
-// Author: Josh Weinmann
+// Author(s): Josh Weinmann and Daniel Shamburger
 //***************************************************
 
 #include "othello.h"
@@ -29,32 +29,404 @@ void displayBoard(char board[][SIZE])
 void initializeBoard(char board[][SIZE])
 {
 	// fill spots with -
-	for (int i = 0; i < SIZE; i++) {
-                for (int j = 0; j < SIZE; j++) {
-			board[i][j] = '-';
-		}
-	}
+	for (int i = 0; i < SIZE; i++) 
+        for (int j = 0; j < SIZE; j++)
+			board[i][j] = EMPTY;
 
 	// put in starting pieces
 	board[3][3] = BLACK;
-        board[3][4] = WHITE;
-        board[4][3] = WHITE;
-        board[4][4] = BLACK;
+	board[3][4] = WHITE;
+	board[4][3] = WHITE;
+	board[4][4] = BLACK;
 }
 
 // Returns true if moving the disc to location row,col is valid; else returns false
 bool isValidMove(char board[][SIZE], int row, int col, char disc)
 {
-	// check if space occupied 
-	if (board[row][col] != '-') {
+	int row_runner = row;
+	int col_runner = col;
+
+	// check if space we'd like to move to is occupied 
+	if (board[row][col] != EMPTY) {
 		return false;
 	}
 
-	
+	// top left 
+	if ( row == 0 && col == 0 ) {
+		// check east for other player
+		if (board[row][col+1] != disc && board[row][col+1] != EMPTY) {
+			// run east
+		 	for ( col_runner = col+2; col_runner < SIZE; col_runner++) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}	
+		// check south east for other player
+		if (board[row+1][col+1] != disc && board[row+1][col+1] != EMPTY) {
+			// run south east
+			for ( row_runner = row+2, col_runner = col+2; row_runner < SIZE && col_runner < SIZE; row_runner++, col_runner++) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+		// check south for other player
+		if (board[row+1][col] != disc && board[row+1][col] != EMPTY) {
+			// run south
+		 	for ( row_runner = row+2; row_runner < SIZE; row_runner++) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}	
+	}
 
+	// top right
+	if ( row == 0 && col == (SIZE - 1) ) {
+		// check west for other player
+		if (board[row][col-1] != disc && board[row][col-1] != EMPTY) {
+			// run west
+		 	for ( col_runner = col-2; col_runner > 0; col_runner--) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+		// check south for other player
+		if (board[row+1][col] != disc && board[row+1][col] != EMPTY) {
+			// run south
+		 	for ( row_runner = row+2; row_runner < SIZE; row_runner++) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+		// check south west for other player
+		if (board[row+1][col-1] != disc && board[row+1][col-1] != EMPTY) {
+			// run south west
+			for ( row_runner = row+2, col_runner = col-2; row_runner < SIZE && col_runner > 0; row_runner++, col_runner--) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+	}
 
+	// bottom left
+	if ( row == (SIZE - 1) && col == 0 ) {
+		// check north for other player
+		if (board[row-1][col] != disc && board[row-1][col] != EMPTY) {
+			// run north
+		 	for ( row_runner = row-2; row_runner > 0; row_runner--) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+		// check east for other player
+		if (board[row][col+1] != disc && board[row][col+1] != EMPTY) {
+			// run east
+		 	for ( col_runner = col+2; col_runner < SIZE; col_runner++) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+		// check north east for other player
+		if (board[row-1][col+1] != disc && board[row-1][col+1] != EMPTY) {
+			// run northeast
+			for ( row_runner = row-2, col_runner = col+2; row_runner > 0 && col_runner < SIZE; row_runner--, col_runner++) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+	}
 
-	return true;	// REPLACE THIS WITH YOUR IMPLEMENTATION
+	// bottom right 
+	if ( row == (SIZE - 1) && col == (SIZE - 1) ) {
+		// check west for other player
+		if (board[row][col-1] != disc && board[row][col-1] != EMPTY) {
+			// run west
+		 	for ( col_runner = col-2; col_runner > 0; col_runner--) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+		// check north for other player
+		if (board[row-1][col] != disc && board[row-1][col] != EMPTY) {
+			// run north
+		 	for ( row_runner = row-2; row_runner > 0; row_runner--) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+		// check north west for other player
+		if (board[row-1][col-1] != disc && board[row-1][col-1] != EMPTY) {
+			// run north west
+			for ( row_runner = row-2, col_runner = col-2; row_runner > 0 && col_runner > 0; row_runner--, col_runner--) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+	}
+
+	// top
+	if ( row == 0 ) {
+		// check west for other player
+		if (board[row][col-1] != disc && board[row][col-1] != EMPTY) {
+			// run west
+		 	for ( col_runner = col-2; col_runner > 0; col_runner--) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+		
+		// check south west for other player
+		if (board[row+1][col-1] != disc && board[row+1][col-1] != EMPTY) {
+			// run south west
+			for ( row_runner = row+2, col_runner = col-2; row_runner < SIZE && col_runner > 0; row_runner++, col_runner--) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south for other player
+		if (board[row+1][col] != disc && board[row+1][col] != EMPTY) {
+			// run south
+		 	for ( row_runner = row+2; row_runner < SIZE; row_runner++) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south east for other player
+		if (board[row+1][col+1] != disc && board[row+1][col+1] != EMPTY) {
+			// run south east
+			for ( row_runner = row+2, col_runner = col+2; row_runner < SIZE && col_runner < SIZE; row_runner++, col_runner++) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check east for other player
+		if (board[row][col+1] != disc && board[row][col+1] != EMPTY) {
+			// run east
+		 	for ( col_runner = col+2; col_runner < SIZE; col_runner++) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+	}
+
+	// right
+	if ( col == (SIZE - 1) ) {
+		// check north
+
+		// check north west for other player
+		if (board[row-1][col-1] != disc && board[row-1][col-1] != EMPTY) {
+			// run north west
+			for ( row_runner = row-2, col_runner = col-2; row_runner > 0 && col_runner > 0; row_runner--, col_runner--) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check west for other player
+		if (board[row][col-1] != disc && board[row][col-1] != EMPTY) {
+			// run west
+		 	for ( col_runner = col-2; col_runner > 0; col_runner--) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south west for other player
+		if (board[row+1][col-1] != disc && board[row+1][col-1] != EMPTY) {
+			// run south west
+			for ( row_runner = row+2, col_runner = col-2; row_runner < SIZE && col_runner > 0; row_runner++, col_runner--) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south for other player
+		if (board[row+1][col] != disc && board[row+1][col] != EMPTY) {
+			// run south
+		 	for ( row_runner = row+2; row_runner < SIZE; row_runner++) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+	}
+
+	// bottom 
+	if ( row == (SIZE - 1) ) {
+		// check west for other player
+		if (board[row][col-1] != disc && board[row][col-1] != EMPTY) {
+			// run west
+		 	for ( col_runner = col-2; col_runner > 0; col_runner--) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check north west for other player
+		if (board[row-1][col-1] != disc && board[row-1][col-1] != EMPTY) {
+			// run north west
+			for ( row_runner = row-2, col_runner = col-2; row_runner > 0 && col_runner > 0; row_runner--, col_runner--) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check north for other player
+		if (board[row-1][col] != disc && board[row-1][col] != EMPTY) {
+			// run north
+		 	for ( row_runner = row-2; row_runner > 0; row_runner--) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check north east for other player
+		if (board[row-1][col+1] != disc && board[row-1][col+1] != EMPTY) {
+			// run northeast
+			for ( row_runner = row-2, col_runner = col+2; row_runner > 0 && col_runner < SIZE; row_runner--, col_runner++) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check east for other player
+		if (board[row][col+1] != disc && board[row][col+1] != EMPTY) {
+			// run east
+		 	for ( col_runner = col+2; col_runner < SIZE; col_runner++) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+	}
+
+	// left 
+	if ( col == 0 ) {
+		// check north for other player
+		if (board[row-1][col] != disc && board[row-1][col] != EMPTY) {
+			// run north
+		 	for ( row_runner = row-2; row_runner > 0; row_runner--) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check north east for other player
+		if (board[row-1][col+1] != disc && board[row-1][col+1] != EMPTY) {
+			// run northeast
+			for ( row_runner = row-2, col_runner = col+2; row_runner > 0 && col_runner < SIZE; row_runner--, col_runner++) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check east for other player
+		if (board[row][col+1] != disc && board[row][col+1] != EMPTY) {
+			// run east
+		 	for ( col_runner = col+2; col_runner < SIZE; col_runner++) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south east for other player
+		if (board[row+1][col+1] != disc && board[row+1][col+1] != EMPTY) {
+			// run south east
+			for ( row_runner = row+2, col_runner = col+2; row_runner < SIZE && col_runner < SIZE; row_runner++, col_runner++) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south for other player
+		if (board[row+1][col] != disc && board[row+1][col] != EMPTY) {
+			// run south
+		 	for ( row_runner = row+2; row_runner < SIZE; row_runner++) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+
+	}
+
+	// middle of the board
+	if ( row < (SIZE - 1) && col < (SIZE - 1) && row != 0 && col != 0 ) {
+
+		// check north for other player
+		if (board[row-1][col] != disc && board[row-1][col] != EMPTY) {
+			// run north
+		 	for ( row_runner = row-2; row_runner > 0; row_runner--) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check north east for other player
+		if (board[row-1][col+1] != disc && board[row-1][col+1] != EMPTY) {
+			// run northeast
+			for ( row_runner = row-2, col_runner = col+2; row_runner > 0 && col_runner < SIZE; row_runner--, col_runner++) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check east for other player
+		if (board[row][col+1] != disc && board[row][col+1] != EMPTY) {
+			// run east
+		 	for ( col_runner = col+2; col_runner < SIZE; col_runner++) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south east for other player
+		if (board[row+1][col+1] != disc && board[row+1][col+1] != EMPTY) {
+			// run south east
+			for ( row_runner = row+2, col_runner = col+2; row_runner < SIZE && col_runner < SIZE; row_runner++, col_runner++) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south for other player
+		if (board[row+1][col] != disc && board[row+1][col] != EMPTY) {
+			// run south
+		 	for ( row_runner = row+2; row_runner < SIZE; row_runner++) {
+		 		if ( board[row_runner][col] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check south west for other player
+		if (board[row+1][col-1] != disc && board[row+1][col-1] != EMPTY) {
+			// run south west
+			for ( row_runner = row+2, col_runner = col-2; row_runner < SIZE && col_runner > 0; row_runner++, col_runner--) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check west for other player
+		if (board[row][col-1] != disc && board[row][col-1] != EMPTY) {
+			// run west
+		 	for ( col_runner = col-2; col_runner > 0; col_runner--) {
+		 		if ( board[row][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+
+		// check north west for other player
+		if (board[row-1][col-1] != disc && board[row-1][col-1] != EMPTY) {
+			// run north west
+			for ( row_runner = row-2, col_runner = col-2; row_runner > 0 && col_runner > 0; row_runner--, col_runner--) {
+		 		if ( board[row_runner][col_runner] == disc ) 
+		 			return true;
+		 	}
+		}
+	}
+
+	return false;
 }
 
 // Places the disc at location row,col and flips the opponent discs as needed
@@ -254,7 +626,6 @@ void placeDiscAt(char board[][SIZE], int row, int col, char disc)
                         j++;
                 }
         }
-
 }
 
 // Returns true if a valid move for disc is available; else returns false
@@ -262,12 +633,10 @@ bool isValidMoveAvailable(char board[][SIZE], char disc)
 {
 	// check all spaces
 	for (int i = 0; i < SIZE; i++) {
-                for (int j = 0; j < SIZE; j++) {
-			
+        for (int j = 0; j < SIZE; j++) {
 			// check if move is valid in space
-			if (isValidMove(board, i, j, disc)) {
+			if (isValidMove(board, i, j, disc)) 
 				return true;
-			}
 		}
 	}		
 
@@ -283,7 +652,7 @@ bool isBoardFull(char board[][SIZE])
 		for (int j = 0; j < SIZE; j++) {
 
 			// check for open spots
-			if (board[i][j] == '-') {
+			if (board[i][j] == EMPTY) {
 				return false;
 			}
 		}
@@ -323,19 +692,18 @@ char checkWinner(char board[][SIZE])
 
 	// count player discs
 	for (int i = 0; i < SIZE; i++) {
-                for (int j = 0; j < SIZE; j++) {
+        for (int j = 0; j < SIZE; j++) {
 
-                        // check for black discs
-                        if (board[i][j] == 'B') {
-                        	b++;
-			}
+	        // check for black discs
+	        if (board[i][j] == 'B') 
+	        	b++;
 
 			// check for white discs
-			if (board[i][j] == 'W') {
-                                w++;
-                        }
-                }
+			if (board[i][j] == 'W') 
+            	w++;
+                        
         }
+    }
 
 	// more white discs
 	if (w > b) {
