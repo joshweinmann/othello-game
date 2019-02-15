@@ -46,7 +46,7 @@ bool isValidMove(char board[][SIZE], int row, int col, char disc)
 	int row_runner = row;
 	int col_runner = col;
 
-	// check if space we'd like to move to is occupied 
+	// space must be empty
 	if (board[row][col] != EMPTY) {
 		return false;
 	}
@@ -426,6 +426,7 @@ bool isValidMove(char board[][SIZE], int row, int col, char disc)
 		}
 	}
 
+	// if it didn't fit any of those cases, it's not a valid move
 	return false;
 }
 
