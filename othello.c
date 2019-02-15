@@ -29,9 +29,11 @@ void displayBoard(char board[][SIZE])
 void initializeBoard(char board[][SIZE])
 {
 	// fill spots with -
-	for (int i = 0; i < SIZE; i++) 
-        for (int j = 0; j < SIZE; j++)
+	for (int i = 0; i < SIZE; i++) {
+        	for (int j = 0; j < SIZE; j++) {
 			board[i][j] = EMPTY;
+		}
+	}
 
 	// put in starting pieces
 	board[3][3] = BLACK;
@@ -476,31 +478,31 @@ void placeDiscAt(char board[][SIZE], int row, int col, char disc)
 	int topRightRow;
 	int topRightCol;
 
-	int i = col;
-	int j = row;
+	int i = row;
+	int j = col;
 
 	// check for top-rightmost diagonal disc
-	while (i < SIZE && j >= 0) {
+	while (i >= 0 && j < SIZE) {
 		if (board[i][j] == disc) {
-			topRightRow = j;
-			topRightCol = i;
+			topRightRow = i;
+			topRightCol = j;
                 }
-		i++;
-		j--;
+		i--;
+		j++;
 	}
 
 	// top left
 	int topLeftRow;
 	int topLeftCol;
 
-	i = col;
 	i = row;
+	j = col;
 
 	// check for top-leftmost diagonal disc
 	while (i >= 0 && j >= 0) {
                 if (board[i][j] == disc) {
-                        topLeftRow = j;
-                        topLeftCol = i;
+                        topLeftRow = i;
+                        topLeftCol = j;
                 }
                 i--;
                 j--;
@@ -510,14 +512,14 @@ void placeDiscAt(char board[][SIZE], int row, int col, char disc)
 	int bottomRightRow;
 	int bottomRightCol;
 
-	i = col;
-	j = row;
+	i = row;
+	j = col;
 
 	// check for bottom-rightmost diagonal disc
 	while (i < SIZE && j < SIZE) {
                 if (board[i][j] == disc) {
-                        bottomRightRow = j;
-                        bottomRightCol = i;
+                        bottomRightRow = i;
+                        bottomRightCol = j;
                 }
                 i++;
                 j++;
@@ -527,17 +529,17 @@ void placeDiscAt(char board[][SIZE], int row, int col, char disc)
 	int bottomLeftRow;
 	int bottomLeftCol;
 
-	i = col;
-	j = row;
+	i = row;
+	j = col;
 
 	// check for bottom-leftmost diagonal disc
-	while (i >= 0 && j < SIZE) {
+	while (i < SIZE && j >= 0) {
                 if (board[i][j] == disc) {
-                        bottomLeftRow = j;
-                        bottomLeftCol = i;
+                        bottomLeftRow = i;
+                        bottomLeftCol = j;
                 }
-                i--;
-                j++;
+                i++;
+                j--;
         }
 	
 	// change discs to right
